@@ -30,7 +30,7 @@ class ReCaptchaField(forms.CharField):
         recaptcha_response_value = smart_unicode(values[1])
         check_captcha = captcha.submit(recaptcha_challenge_value,
             recaptcha_response_value, settings.RECAPTCHA_PRIVATE_KEY, {})
-        if self.required and not check_captcha.is_valid:
+        if not check_captcha.is_valid:
             raise forms.util.ValidationError(
                     self.error_messages['captcha_invalid'])
         return values[0]
