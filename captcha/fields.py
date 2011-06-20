@@ -19,11 +19,6 @@ class ReCaptchaField(forms.CharField):
         self.required = True
         super(ReCaptchaField, self).__init__(*args, **kwargs)
 
-    def __init__(self, *args, **kwargs):
-        self.widget = ReCaptcha
-        self.required = True
-        super(ReCaptchaField, self).__init__(*args, **kwargs)
-
     def clean(self, values):
         super(ReCaptchaField, self).clean(values[1])
         recaptcha_challenge_value = smart_unicode(values[0])
