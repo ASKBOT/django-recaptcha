@@ -11,7 +11,8 @@ from captcha.widgets import ReCaptcha
 class ReCaptchaField(forms.CharField):
 
     default_error_messages = {
-        'captcha_invalid': _(u'Invalid captcha')
+        'captcha_invalid': _(u'The text you entered did not match, please try '
+                              'again.')
     }
 
     def __init__(self, *args, **kwargs):
