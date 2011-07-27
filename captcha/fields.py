@@ -16,7 +16,16 @@ class ReCaptchaField(forms.CharField):
     }
 
     def __init__(self, *args, **kwargs):
-        self.widget = ReCaptcha
+        public_key = kwargs.pop('public_key', None) \
+                    or getattr(settings, 'RECAPTCHA_PUBLIC_KEY', None)
+
+        self.private_key = kwargs.pop('private_key', None) \
+                    or getattr(settings, 'RECAPTCHA_PRIVATE_KEY', None)
+
+        use_ssl = kwargs.pop('use_ssl', False) \
+                    or getattr(settings, 'RECAPTCHA_USE_SSL', False)
+
+        self.widget = ReCaptcha(public_key = public_key, use_ssl = use_ssl)
         self.required = True
         super(ReCaptchaField, self).__init__(*args, **kwargs)
 
@@ -25,7 +34,7 @@ class ReCaptchaField(forms.CharField):
         recaptcha_challenge_value = smart_unicode(values[0])
         recaptcha_response_value = smart_unicode(values[1])
         check_captcha = captcha.submit(recaptcha_challenge_value,
-            recaptcha_response_value, settings.RECAPTCHA_PRIVATE_KEY, {})
+            recaptcha_response_value, self.private_key, {})
         if not check_captcha.is_valid:
             raise forms.util.ValidationError(
                     self.error_messages['captcha_invalid'])
